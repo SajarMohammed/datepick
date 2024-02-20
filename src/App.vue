@@ -31,6 +31,7 @@
    editable: true,
    dayMaxEvents: true,
    selectable: true,
+   eventeventColor: 'red',
    selectMirror: true,
    dayMaxEvents: true,
    weekends: true,
