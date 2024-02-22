@@ -1,16 +1,19 @@
 <template>
   <div class='demo-app'>
-     <div class='search-container'>
-       <input type="date" v-model="searchDate" @change="highlightDate" placeholder="Search by date..." class="input"/>
-     </div>
-     <div class='demo-app-main'>
-       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
+     <div v-if="isLoading" class="loader">LOADING</div>
+     <div v-else>
+       <div class='search-container'>
+         <input type="date" v-model="searchDate" @change="highlightDate" placeholder="Search by date..." class="input"/>
+       </div>
+       <div class='demo-app-main'>
+         <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
+       </div>
      </div>
    </div>
- </template>
+</template>
  
  <script setup>
- import { ref, watch } from 'vue';
+ import { onMounted, ref, watch } from 'vue';
  import FullCalendar from '@fullcalendar/vue3';
  import dayGridPlugin from '@fullcalendar/daygrid';
  import timeGridPlugin from '@fullcalendar/timegrid';
@@ -19,6 +22,7 @@
  
  const fullCalendarRef = ref(null);
  const searchDate = ref('');
+ const isLoading = ref(true);
  const calendarOptions = {
    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
    initialView: 'dayGridMonth',
@@ -31,7 +35,7 @@
    editable: true,
    dayMaxEvents: true,
    selectable: true,
-   eventeventColor: 'red',
+   eventColor: 'red',
    selectMirror: true,
    dayMaxEvents: true,
    weekends: true,
@@ -39,6 +43,13 @@
    select: handleDateSelect,
    eventClick: handleEventClick,
  };
+ 
+ onMounted(()=>{
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 6000);
+ })
+
  function handleDateSelect(selectInfo) {
    const title = prompt('Please enter a new title for your event');
    if (title) {
@@ -77,6 +88,32 @@
  }
  </script>
  <style scoped>
+ .loader {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border-right-color: black;
+  animation: spin 1s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
  h2 {
    margin: 0;
    font-size: 16px;
